@@ -6,4 +6,6 @@ lib/*
 include/*
 tensorflow-mnist-tutorial/*
 MNIST_data/*
+a model from our own data/sentiment_set.pickle
+"a model from our own data"/sentiment_set.pickle
 
