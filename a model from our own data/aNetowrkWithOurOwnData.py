@@ -1,6 +1,7 @@
 from createSentimentFeaturesets import create_feature_sets_and_labels
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 
 train_x, train_y, test_x, test_y = create_feature_sets_and_labels('pos.txt', 'neg.txt')
 
@@ -50,6 +51,8 @@ def training(features):
     prediction = define_model(features)
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prediction, labels=y_))
     optimizer = tf.train.AdamOptimizer().minimize(loss)
+
+    loss_ = []
     
     num_epochs = 20
     with tf.Session() as sess:
@@ -65,7 +68,7 @@ def training(features):
                 batch_y = np.array(train_y[start:end])
                 _, c = sess.run([optimizer, loss], feed_dict={x:batch_x, y_:batch_y})
                 epoch_loss += c
-
+                loss_.append(c)
                 i += batch_size
             
             print('Epoch', epoch, ' completed out of ', num_epochs, ' loss: ', epoch_loss)
@@ -74,7 +77,7 @@ def training(features):
         accuracy = tf.reduce_mean(tf.cast(correct, 'float32'))
         print('Accuracy : ', accuracy.eval({x:test_x, y_:test_y}))
 
-training(x)
-            
-            
+    plt.plot(loss_)
+    plt.show()
 
+training(x)
